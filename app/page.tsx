@@ -4,7 +4,7 @@ import { useState } from "react";
 import { v4 as uuidv4 } from "uuid";
 import TaskForm from "../components/TaskForm";
 import TaskBoard from "../components/TaskBoard";
-import { Task } from "./types";
+import { Task, TaskStatus } from "./types";
 
 export default function Home() {
   const [tasks, setTasks] = useState<Task[]>([]);
@@ -24,6 +24,14 @@ export default function Home() {
 
   const handleEdit = (task: Task) => setEditTask(task);
 
+  const handleStatusChange = (taskId: string, newStatus: TaskStatus) => {
+    setTasks(
+      tasks.map((task) =>
+        task.id === taskId ? { ...task, status: newStatus } : task
+      )
+    );
+  };
+
   return (
     <main className="min-h-screen bg-gradient-to-br from-gray-50 to-gray-100 py-12 px-4 sm:px-6 lg:px-8">
       <div className="max-w-4xl mx-auto">
@@ -31,7 +39,12 @@ export default function Home() {
           Task Manager
         </h1>
         <TaskForm onSave={handleSave} editTask={editTask} />
-        <TaskBoard tasks={tasks} onEdit={handleEdit} onDelete={handleDelete} />
+        <TaskBoard
+          tasks={tasks}
+          onEdit={handleEdit}
+          onDelete={handleDelete}
+          onStatusChange={handleStatusChange}
+        />
       </div>
     </main>
   );
